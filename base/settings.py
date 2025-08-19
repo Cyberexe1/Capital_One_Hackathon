@@ -34,11 +34,18 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-q6z55oy#2hl394iql=-b+p*p$2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['mick-nf0x.onrender.com']
+ALLOWED_HOSTS = [
+    'capital-one-hackathon.onrender.com',
+    'localhost',
+    '127.0.0.1'
+]
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://capital-one-hackathon.onrender.com',
+]
 # Application definition
-
+# ...existing code...
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
