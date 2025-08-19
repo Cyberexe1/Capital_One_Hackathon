@@ -1,8 +1,8 @@
 // Backend communication and processing functions
 
 // Commodity trend helper (fetches from the price API and answers in a fixed sentence)
-const PRICE_API_URL = 'http://127.0.0.1:8000/api/price/all/';
-const ADVISORY_API_BASE = 'http://127.0.0.1:8000/api/advisory/';
+const PRICE_API_URL = '/api/price/all/';
+const ADVISORY_API_BASE = '/api/advisory/';
 
 // Removed parse-based commodity extraction; rely on Gemini intent understanding.
 
@@ -301,7 +301,7 @@ function buildAnswerLocalized(commodityName, from, to, useHindi) {
     return `${commodityName} price is going to ${trend} from ${from}/kg to ${to}/kg`;
 }
 
-async function getCommodityTrend(commodityName, apiUrl = 'http://127.0.0.1:8000/api/price/all/', useHindi = false) {
+async function getCommodityTrend(commodityName, apiUrl = PRICE_API_URL, useHindi = false) {
     const res = await fetch(apiUrl, { cache: 'no-store' });
     if (!res.ok) throw new Error(`API error ${res.status}`);
     const data = await res.json();
