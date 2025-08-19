@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MICK - AI Speech Assistant</title>
+    <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div class="particle-container" id="particleContainer"></div>
+    
+    <!-- Floating Elements -->
+    <div class="floating-elements">
+        <div class="floating-circle" style="--delay: 0s"></div>
+        <div class="floating-circle" style="--delay: 2s"></div>
+        <div class="floating-circle" style="--delay: 4s"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="interface-container">
+                <!-- Conversation Section -->
+                <div class="conversation-section">
+                    <div class="conversation-container" id="conversationContainer">
+                        <!-- Welcome Message -->
+                        <div class="message ai-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <div class="message-text">
+                                    Hello! I'm MICK, your AI assistant. Click the microphone and start speaking, or use the text input below.
+                                </div>
+                                <div class="message-time">Just now</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="input-area">
+                        <div class="input-row">
+                            <div class="mick-circle-container">
+                                <div class="mick-circle" id="mickCircle">
+                                    <div class="circle-inner">
+                                        <i class="fas fa-microphone"></i>
+                                        <span class="mick-text">MIC</span>
+                                    </div>
+                                    <div class="pulse-ring"></div>
+                                    <div class="energy-rings">
+                                        <div class="energy-ring ring-1"></div>
+                                        <div class="energy-ring ring-2"></div>
+                                        <div class="energy-ring ring-3"></div>
+                                    </div>
+                                </div>
+                                <div class="voice-visualizer" id="voiceVisualizer">
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-input-container">
+                                <div class="text-input-wrapper">
+                                    <textarea 
+                                        id="textInput" 
+                                        placeholder="Type your message here..."
+                                        rows="1"
+                                        maxlength="500"
+                                    ></textarea>
+                                    <button class="send-btn" id="sendBtn">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="action-btn replay-btn" id="replayBtn">
+                                <i class="fas fa-play"></i>
+                                <span>Replay</span>
+                                <div class="btn-glow"></div>
+                            </button>
+                            <button class="action-btn clear-btn" id="clearBtn">
+                                <i class="fas fa-trash"></i>
+                                <span>Clear</span>
+                                <div class="btn-glow"></div>
+                            </button>
+                            <button class="action-btn settings-btn" id="settingsBtn">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                                <div class="btn-glow"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-indicator">
+                <div class="status-dot" id="statusDot"></div>
+                <span class="status-message" id="statusMessage">Ready to listen</span>
+            </div>
+            <div class="keyboard-shortcuts">
+                <span class="shortcut">SPACE</span> to speak • 
+                <span class="shortcut">ENTER</span> to send • 
+                <span class="shortcut">0</span> to replay
+            </div>
+            <div class="connection-status">
+                <div class="connection-dot"></div>
+                <span>Connected</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <div class="loading-text">
+                <span class="loading-dots">Processing</span>
+                <div class="dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label>Voice Speed</label>
+                    <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1">
+                    <span class="setting-value" id="speedValue">1.0x</span>
+                </div>
+                <div class="setting-group">
+                    <label>Auto-Speak</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="autoSpeak" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'scripts/script.js' %}"></script>
+    <!-- DEV ONLY: Inline API key for Gemini. Do NOT commit real keys to public repos. -->
+    <script>
+      // Set your Gemini API key for local development
+      window.GEMINI_API_KEY = 'AIzaSyCvpD1TqD1bLoNQpUy8Q6SshQmPeRtm4ac';
+      // Sarvam TTS config exposed via script tag
+      // Use backend Sarvam TTS by default; set model/voice to 'Anushka'
+      window.USE_SARVAM_TTS = true;
+      window.SARVAM_VOICE = 'Anushka';
+      // DEV ONLY: Sarvam API key (frontend-exposed). Use only in local/dev.
+      // WARNING: Anyone accessing this page can see this key.
+      window.SARVAM_API_KEY = 'sk_u4yx2dqh_VraXLHrslC14Dta2KA7Y3w8Y';
+      // Use backend proxy for TTS (recommended). Set to false to avoid client-side 403s/CORS issues.
+      window.USE_DIRECT_SARVAM = false;
+      // Optional: if enabling direct, ensure correct endpoint like 'https://api.sarvam.ai/v1/tts'
+      window.SARVAM_TTS_URL = 'https://api.sarvam.ai/v1/tts';
+    </script>
+    <script src="{% static 'scripts/chat.js' %}"></script>
+</body>
+</html>
